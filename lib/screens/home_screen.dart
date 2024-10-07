@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:functional_quiz_app/data/data.dart';
+import 'package:functional_quiz_app/screens/category_set_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -59,7 +60,12 @@ class HomeScreen extends StatelessWidget {
                 itemBuilder: (context, index){
                   final category = Data.categories[index];
                   return InkWell(
-                    onTap: (){},
+                    onTap: (){
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) =>
+                          CategorySetScreen(category: category),
+                          ));
+                    },
                     child: Container(
                       padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
                       decoration: BoxDecoration(
