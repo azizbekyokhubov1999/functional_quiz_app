@@ -5,6 +5,7 @@ class WelcomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Material(
       child: Container(
         width: MediaQuery.of(context).size.width,
