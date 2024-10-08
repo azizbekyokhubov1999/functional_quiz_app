@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:functional_quiz_app/data/data.dart';
 import 'package:functional_quiz_app/models/model.dart';
+import 'package:functional_quiz_app/screens/quiz_screen.dart';
 
 class CategorySetScreen extends StatelessWidget {
   final Category category;
@@ -40,7 +41,7 @@ class CategorySetScreen extends StatelessWidget {
                         size: 30,
                       ),
                     ),
-                    Text("Test Your Skills",
+                    Text("${category.name} Quiz",
                       style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.w500,
@@ -58,7 +59,11 @@ class CategorySetScreen extends StatelessWidget {
                     final quizSet = category.quizSets[index];
                     return Padding(padding: EdgeInsets.all(8),
                      child: GestureDetector(
-                       onTap: (){},
+                       onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder:
+                        (context) => QuizScreen(quizSet: quizSet),
+                        ));
+                       },
                        child: Container(
                          width: MediaQuery.of(context).size.width / 1,
                          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
