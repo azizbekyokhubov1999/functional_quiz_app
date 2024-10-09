@@ -30,19 +30,19 @@ class _QuizScreenState extends State<QuizScreen> {
     }
   }
 
-    void goToPreviousQuestion() {
-      if (currentQuestionIndex > 0) {
-        setState(() {
-          currentQuestionIndex--;
-        });
-      }
+  void goToPreviousQuestion() {
+    if (currentQuestionIndex > 0) {
+      setState(() {
+        currentQuestionIndex--;
+      });
     }
+  }
 
   @override
   Widget build(BuildContext context) {
     final Question currentQuestion =
         widget.quizSet.questions[currentQuestionIndex];
-    return  Scaffold(
+    return Scaffold(
       body: Container(
         height: double.infinity,
         width: MediaQuery.of(context).size.width,
@@ -53,32 +53,33 @@ class _QuizScreenState extends State<QuizScreen> {
               colors: [
                 Colors.purple,
                 Colors.indigo,
-              ]
-          ),
+              ]),
         ),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height:  35),
-              Padding(padding: EdgeInsets.symmetric(horizontal: 15),
+              SizedBox(height: 35),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15),
                 child: Row(
                   children: [
                     InkWell(
-                      onTap: (){
+                      onTap: () {
                         Navigator.pop(context);
                       },
-                      child: Icon(Icons.arrow_back_ios,
+                      child: Icon(
+                        Icons.arrow_back_ios,
                         color: Colors.white,
                         size: 30,
                       ),
                     ),
-                    Text(widget.quizSet.name,
+                    Text(
+                      widget.quizSet.name,
                       style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.w500,
-                          color: Colors.white
-                      ),
+                          color: Colors.white),
                     ),
                   ],
                 ),
@@ -95,14 +96,12 @@ class _QuizScreenState extends State<QuizScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                        currentQuestion.question,
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold
-                      ),
+                      currentQuestion.question,
+                      style:
+                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 20),
-                    ...currentQuestion.options.asMap().entries.map((entry){
+                    ...currentQuestion.options.asMap().entries.map((entry) {
                       final index = entry.key;
                       final option = entry.value;
                       return GestureDetector(
@@ -112,80 +111,100 @@ class _QuizScreenState extends State<QuizScreen> {
                           });
                         },
                         child: Container(
-                          padding: EdgeInsets.symmetric(vertical: 15, horizontal: 5),
+                          padding:
+                              EdgeInsets.symmetric(vertical: 15, horizontal: 5),
                           margin: EdgeInsets.symmetric(vertical: 8),
                           decoration: BoxDecoration(
-                            color: selectedAnswers[currentQuestionIndex] ==
-                              index ? Colors.indigo
-                                : Colors.white,
+                            color:
+                                selectedAnswers[currentQuestionIndex] == index
+                                    ? Colors.indigo
+                                    : Colors.white,
                             border: Border.all(
                               width: 2,
-                              color: selectedAnswers[currentQuestionIndex] ==
-                                index ? Colors.indigo
-                                  : Colors.grey,
-
+                              color:
+                                  selectedAnswers[currentQuestionIndex] == index
+                                      ? Colors.indigo
+                                      : Colors.grey,
                             ),
                             borderRadius: BorderRadius.circular(25),
                           ),
                           child: Center(
                             child: Text(
-                                option,
+                              option,
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                color: selectedAnswers[currentQuestionIndex] == index? Colors.white : Colors.black,
+                                color: selectedAnswers[currentQuestionIndex] ==
+                                        index
+                                    ? Colors.white
+                                    : Colors.black,
                                 fontWeight: FontWeight.w500,
                                 fontSize: 16,
-
                               ),
                             ),
                           ),
                         ),
                       );
-              })
+                    })
                   ],
                 ),
               ),
               Padding(
-                  padding: EdgeInsets.all(15),
+                padding: EdgeInsets.all(15),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    currentQuestionIndex > 0 ? ElevatedButton(
-                onPressed: goToPreviousQuestion,
-                    child: Text("Back",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
-                      ),
-                    )
-                ): SizedBox(),
-
+                    currentQuestionIndex > 0
+                        ? ElevatedButton(
+                            onPressed: goToPreviousQuestion,
+                            child: Text(
+                              "Back",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.black,
+                              ),
+                            ))
+                        : SizedBox(),
                     ElevatedButton(
-                        onPressed: (){
-                          if(currentQuestionIndex < widget.quizSet.questions.length){
+                        onPressed: () {
+                          if (currentQuestionIndex <
+                              widget.quizSet.questions.length - 1) {
                             goToNextQuestion();
-                          }
-                          else{
+                          } else {
                             int totalCorrect = 0;
-                            for(int i = 0; i<widget.quizSet.questions.length; i++){
-                              if(selectedAnswers[i] == widget.quizSet.questions[i].selectedIndex){
+                            for (int i = 0;
+                                i < widget.quizSet.questions.length;
+                                i++) {
+                              if (selectedAnswers[i] ==
+                                  widget.quizSet.questions[i].selectedIndex) {
                                 totalCorrect++;
                               }
                             }
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder:
-                            (context) => ResultScreen(),
-                            ));
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ResultScreen(
+                                    totalQuestion:
+                                        widget.quizSet.questions.length,
+                                    totalAttempts:
+                                        widget.quizSet.questions.length,
+                                    totalCorrect: totalCorrect,
+                                    totalScore: totalCorrect * 10,
+                                    quizSet: widget.quizSet,
+                                  ),
+                                ));
+
                           }
                         },
-                        child: Text(currentQuestionIndex == widget.quizSet.questions.length -1
-                            ? "Submit"
-                            : "Next",
+                        child: Text(
+                          currentQuestionIndex ==
+                                  widget.quizSet.questions.length - 1
+                              ? "Submit"
+                              : "Next",
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.black,
                           ),
-                        )
-                    )
+                        ))
                   ],
                 ),
               )
