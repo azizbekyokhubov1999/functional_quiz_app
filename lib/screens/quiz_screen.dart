@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:functional_quiz_app/screens/result_screen.dart';
 
 import '../models/model.dart';
 
@@ -83,7 +84,7 @@ class _QuizScreenState extends State<QuizScreen> {
                 ),
               ),
               Container(
-                height: MediaQuery.of(context).size.height / 1.8,
+                height: MediaQuery.of(context).size.height / 1.6,
                 margin: EdgeInsets.all(16),
                 padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -101,6 +102,90 @@ class _QuizScreenState extends State<QuizScreen> {
                       ),
                     ),
                     SizedBox(height: 20),
+                    ...currentQuestion.options.asMap().entries.map((entry){
+                      final index = entry.key;
+                      final option = entry.value;
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            selectedAnswers[currentQuestionIndex] = index;
+                          });
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(vertical: 15, horizontal: 5),
+                          margin: EdgeInsets.symmetric(vertical: 8),
+                          decoration: BoxDecoration(
+                            color: selectedAnswers[currentQuestionIndex] ==
+                              index ? Colors.indigo
+                                : Colors.white,
+                            border: Border.all(
+                              width: 2,
+                              color: selectedAnswers[currentQuestionIndex] ==
+                                index ? Colors.indigo
+                                  : Colors.grey,
+
+                            ),
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                          child: Center(
+                            child: Text(
+                                option,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: selectedAnswers[currentQuestionIndex] == index? Colors.white : Colors.black,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+              })
+                  ],
+                ),
+              ),
+              Padding(
+                  padding: EdgeInsets.all(15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    currentQuestionIndex > 0 ? ElevatedButton(
+                onPressed: goToPreviousQuestion,
+                    child: Text("Back",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black,
+                      ),
+                    )
+                ): SizedBox(),
+
+                    ElevatedButton(
+                        onPressed: (){
+                          if(currentQuestionIndex < widget.quizSet.questions.length){
+                            goToNextQuestion();
+                          }
+                          else{
+                            int totalCorrect = 0;
+                            for(int i = 0; i<widget.quizSet.questions.length; i++){
+                              if(selectedAnswers[i] == widget.quizSet.questions[i].selectedIndex){
+                                totalCorrect++;
+                              }
+                            }
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder:
+                            (context) => ResultScreen(),
+                            ));
+                          }
+                        },
+                        child: Text(currentQuestionIndex == widget.quizSet.questions.length -1
+                            ? "Submit"
+                            : "Next",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        )
+                    )
                   ],
                 ),
               )
